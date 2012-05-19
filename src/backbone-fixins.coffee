@@ -20,8 +20,8 @@ Intended to be a view you can extend that does the typical housekeeping
 
 class Backbone.Fixins.SuperView extends Backbone.View
   render: ->
-    template = config.templateFunction(config.locateTemplate(@))
-    context = config.templateContext(@)
+    template = config.templateFunction(superView.locateTemplate(@))
+    context = superView.templateContext(@)
     @$el.html(template(context))
 
     for f in _(@).functions()
@@ -29,6 +29,17 @@ class Backbone.Fixins.SuperView extends Backbone.View
 
     @trigger('rendered')
 
+superView =
+  templateContext: (view) ->
+    if view.templateContext?
+      view.templateContext?() or view.templateContext
+    else
+      config.defaultTemplateContext(view)
+  locateTemplate: (view) ->
+    if view.template?
+      view.template?() or view.template
+    else
+      config.defaultTemplateLocator(view)
 
 ###
 Extendable Configuration.
@@ -45,17 +56,11 @@ For example, you might write: ???
 config =
   templateFunction: (name) ->
     root.JST[name]
-  locateTemplate: (view) ->
-    if view.template?
-      view.template?() or view.template
-    else
-      name = fixins.helpers.constructorNameOf(view)
-      "templates/#{fixins.helpers.titleToSnakeCase(name)}"
-  templateContext: (view) ->
-    if view.templateContext?
-      view.templateContext?() or view.templateContext
-    else
-     (view.model or view.collection)?.toJSON() or {}
+  defaultTemplateContext: (view) ->
+    (view.model or view.collection)?.toJSON() or {}
+  defaultTemplateLocator: (view) ->
+    name = fixins.helpers.constructorNameOf(view)
+    "templates/#{fixins.helpers.titleToSnakeCase(name)}"
 
 ###
 # Random helpers. Pretend these are private, but I won't hide them
