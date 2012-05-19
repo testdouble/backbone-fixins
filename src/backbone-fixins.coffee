@@ -5,21 +5,29 @@ site: https://github.com/testdouble/backbone-fixins
 ###
 
 root = this
+Backbone = root.Backbone
 
+unless Backbone? then throw "backbone-fixins requires Backbone. Make sure you load Backbone first"
 
-unless root.Backbone? then throw "backbone-fixins requires Backbone. Make sure you load Backbone first"
-
-fixins = root.Backbone.Fixins ||= {}
+fixins = Backbone.Fixins ||= {}
 
 ###
-SuperView
+Backbone.Fixins.SuperView
+
+Intended to be a view you can extend that does the typical housekeeping
+  of any application-owned view (find template, plug in serialized context, render into element)
 ###
 
-class fixins.SuperView extends Backbone.View
+class Backbone.Fixins.SuperView extends Backbone.View
   render: ->
     template = config.templateFunction(config.locateTemplate(@))
     context = config.templateContext(@)
-    template(context)
+    @$el.html(template(context))
+
+    for f in _(@).functions()
+      @[f]() if fixins.helpers.startsWith(f, butIsntExactly: "render")
+
+    @trigger('rendered')
 
 
 ###
@@ -27,23 +35,29 @@ Extendable Configuration.
 
 Feel free to extend the configuration to suit your project's needs.
 
-For example, you might write:
-
-
-
+For example, you might write: ???
 ###
 
 # Backbone.Fixins.configure = (customConfigurationObject) ->
 #   config = _(config).extend(customConfigurationObject)
 
+
 config =
   templateFunction: (name) ->
     root.JST[name]
   locateTemplate: (view) ->
-    name = fixins.helpers.constructorNameOf(view)
-    "templates/#{fixins.helpers.titleToSnakeCase(name)}"
+    if view.template?
+      view.template?() or view.template
+    else
+      name = fixins.helpers.constructorNameOf(view)
+      "templates/#{fixins.helpers.titleToSnakeCase(name)}"
   templateContext: (view) ->
     view.model.toJSON()
+
+###
+# Random helpers. Pretend these are private, but I won't hide them
+#   in the event you have a really good reason to override them.
+###
 
 fixins.helpers =
   constructorNameOf: (obj) ->
@@ -51,4 +65,7 @@ fixins.helpers =
     (if (results and results.length > 1) then results[1] else "")
   titleToSnakeCase: (titleCasedString) ->
     titleCasedString.replace(/([a-z\d])([A-Z]+)/g, '$1_$2').replace(/[-\s]+/g, '_').toLowerCase();
+  startsWith: (str, options) ->
+    starts = options.butIsntExactly
+    str.length > starts.length and str.substr(0, starts.length) is starts
 
