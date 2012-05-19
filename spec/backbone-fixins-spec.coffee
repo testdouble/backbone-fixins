@@ -80,8 +80,23 @@ describe "Backbone.Fixins.SuperView", ->
           template: -> "dont_tell_me_where_to_stick_my_template"
         itBehavesLike "rendering a custom template"
 
-
-
 #    context "a view with deeply nested namespace", pending
-#    context "manually specifying a way to retrieve templates", pending
+
+    context "manually specifying a way to retrieve templates", ->
+      Given -> Backbone.Fixins.configure
+        templateFunction: (name) ->
+          templateSource = $("#" + name).html()
+          _.template templateSource
+        defaultTemplateLocator: (view) ->
+          Backbone.Fixins.helpers.constructorNameOf(view);
+
+       Given -> affix('#SubView').html('<div class="specialHTML"></div>')
+       Given -> @subject = new @subView(model: @model)
+       When -> @subject.render()
+       Then -> expect(@subject.el).toHas('.specialHTML')
+
+       describe "resetting configuration overrides", ->
+         Given -> Backbone.Fixins.resetConfiguration()
+         When -> @subject.render()
+         Then -> expect(@subject.el).toHas('.HTML')
 

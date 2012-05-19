@@ -1,7 +1,9 @@
 ###
-backbone-fixins @@VERSION@@
-Boilerplate that strengthens your backbone
-site: https://github.com/testdouble/backbone-fixins
+ backbone-fixins @@VERSION@@
+
+ Boilerplate that strengthens your backbone
+
+ site: https://github.com/testdouble/backbone-fixins
 ###
 
 root = this
@@ -14,8 +16,10 @@ fixins = Backbone.Fixins ||= {}
 ###
 Backbone.Fixins.SuperView
 
-Intended to be a view you can extend that does the typical housekeeping
-  of any application-owned view (find template, plug in serialized context, render into element)
+Intended to be a view from which each application view will extend in order to DRY
+  up the typical housekeeping normally carried out by Backbone.View subclasses (e.g.
+  find template, plug in serialized context, render markup into element)
+
 ###
 
 class Backbone.Fixins.SuperView extends Backbone.View
@@ -44,16 +48,25 @@ superView =
 ###
 Extendable Configuration.
 
-Feel free to extend the configuration to suit your project's needs.
+Feel free to override the configuration to suit your project's needs.
 
-For example, you might write: ???
+Examples:
+ - Suppose you want to grab your template functions from <script> elements on the DOM
+   and compile them with underscore's _.template(). You could:
+
+    Backbone.fixins.configure({
+      templateFunction: function(name){
+        templateSource = $('script[type="text/html"]#'+name).html();
+        return _.template(templateSource);
+      },
+      defaultTemplateLocator: function(view){
+        return Backbone.Fixins.helpers.constructorNameOf(view);
+      }
+    });
+
 ###
 
-# Backbone.Fixins.configure = (customConfigurationObject) ->
-#   config = _(config).extend(customConfigurationObject)
-
-
-config =
+config = ogConfig =
   templateFunction: (name) ->
     root.JST[name]
   defaultTemplateContext: (view) ->
@@ -61,6 +74,12 @@ config =
   defaultTemplateLocator: (view) ->
     name = fixins.helpers.constructorNameOf(view)
     "templates/#{fixins.helpers.titleToSnakeCase(name)}"
+
+Backbone.Fixins.configure = (customConfigurationObject) ->
+  config = fixins.helpers.merge(config, customConfigurationObject)
+
+Backbone.Fixins.resetConfiguration = ->
+  config = ogConfig
 
 ###
 # Random helpers. Pretend these are private, but I won't hide them
@@ -76,4 +95,6 @@ fixins.helpers =
   startsWith: (str, options) ->
     starts = options.butIsntExactly
     str.length > starts.length and str.substr(0, starts.length) is starts
+  merge: (orig, newStuff) ->
+    _(orig).chain().clone().extend(newStuff).value()
 
