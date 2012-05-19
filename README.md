@@ -2,6 +2,8 @@
 
 [![Build Status](https://secure.travis-ci.org/testdouble/backbone-fixins.png)](http://travis-ci.org/testdouble/backbone-fixins)
 
+**[Download the latest version here](https://raw.github.com/testdouble/backbone-fixins/master/dist/backbone-fixins.js)**
+
 A common complaint directed at [Backbone.js](https://github.com/documentcloud/backbone) is that it's hard to get up-and-running without a significant amount of general boilerplate code. On one hand, Backbone's minimalism is its greatest strength. On the other hand, it doesn't make sense for our applications to solve problems that are outside of their domain, and it makes even less sense to solve the same problems in each new application we write.
 
 This project doesn't aim to saddle users with a new Backbone meta-framework. But neither does it have the luxury of being so focused as to only tackle one feature or problem (like [backbone-localstorage](https://github.com/jeromegn/Backbone.localStorage), [backbone.layoutmanager](https://github.com/tbranyen/backbone.layoutmanager), or [backbone-relational](https://github.com/PaulUithol/Backbone-relational) do). Instead, backbone-fixins will only ever be a handful of little, easy-to-discard boilerplate utilities. The only motivation here is to help new applications get up-and-running a little more quickly.
