@@ -16,8 +16,8 @@ Most basic Backbone views do the following:
 
 1. Override the `#render` function
 2. Grab a compiled template
-3. Generate HTML by passing a context object to the template; usually by serializing the view's `model` property as JSON.
-4. Render that HTML into the View's `el` element.
+3. Generate HTML by passing a context object to the template; usually by serializing the view's `model` property as JSON
+4. Render that HTML into the View's `el` element
 
 And while this works fine, I'm sick of writing code to do it. First, none of this is a domain concern... it's a concern shared by nearly *every* view—why not DRY this up and get it out of the way? Second, overridden `render` functions don't age gracefully, in my experience.
 
@@ -32,17 +32,17 @@ class MyView extends Backbone.Fixins.SuperView
 
 Invoking `new MyView(model: new Backbone.Model).render()` will do a lot for you:
 
-1. By default, it'll look for a template function at `JST['templates/my_view']`.
-2. It will invoke the template by passing it the view's `model.toJSON()`.
-3. It will render the resulting HTML into the view's `el` element.
-4. It will invoke the view's `renderJQueryAccordion` function, because the function's name started with the word "render".
-5. It will trigger a `"rendered"` event on the view, so that additional post-render behavior can be added dynamically without tempting the user to override the `render` function
+1. By default, it'll look for a template function at `JST['templates/my_view']`
+2. It will invoke the template by passing it the view's `model.toJSON()`
+3. It will render the resulting HTML into the view's `el` element
+4. It will invoke the view's `renderJQueryAccordion` function, because the function's name started with the word "render"
+5. It will trigger a `"rendered"` event on the view, so that behavior can be added whenever the view is rendered (without tempting the user to override the `render` function)
 
 In case you missed it, that means that in addition to making some logical assumptions, two new conventions can help you avoid coupling behaviors that only have rendering in common.
 
-* Any view may define any number of methods that start with the word "render", and they'll each be called immediately after the template is re-rendered. But the methods are still available to be bound to other events to allow small aspects of the view to be re-rendered without a more-expensive call to the `render` function.
+* Any view may define any number of methods that start with the word "render", and they'll each be called immediately after the template is re-rendered. But the methods are still available to be bound to other events to allow small aspects of the view to be re-rendered without a more-expensive call to the `render` function
 
-* After each render is completed, views will emit a "rendered" event that anything else can bind to.
+* After each render is completed, views will emit a "rendered" event that anything else can bind to
 
 ### SuperView customization
 
