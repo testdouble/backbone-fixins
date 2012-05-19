@@ -52,7 +52,10 @@ config =
       name = fixins.helpers.constructorNameOf(view)
       "templates/#{fixins.helpers.titleToSnakeCase(name)}"
   templateContext: (view) ->
-    view.model.toJSON()
+    if view.templateContext?
+      view.templateContext?() or view.templateContext
+    else
+     (view.model or view.collection)?.toJSON() or {}
 
 ###
 # Random helpers. Pretend these are private, but I won't hide them
