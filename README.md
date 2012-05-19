@@ -2,9 +2,13 @@
 
 [![Build Status](https://secure.travis-ci.org/testdouble/backbone-fixins.png)](http://travis-ci.org/testdouble/backbone-fixins)
 
-A common complaint I hear about [Backbone.js](https://github.com/documentcloud/backbone) is that it's hard to get up-and-running without rolling your own boilerplate. On one hand, Backbone's minimalism is it's greatest strength. On the other hand, it doesn't make sense for our applications to solve problems that are outside of their domain.
+A common complaint directed at [Backbone.js](https://github.com/documentcloud/backbone) is that it's hard to get up-and-running without a significant amount of general boilerplate code. On one hand, Backbone's minimalism is its greatest strength. On the other hand, it doesn't make sense for our applications to solve problems that are outside of their domain, and it makes even less sense to solve the same problems in each new application we write.
 
-This project doesn't aim to saddle users with a new Backbone meta-framework. Nor will it have the luxury of being so focused as to only tackle one feature or problem (like [backbone-localstorage](https://github.com/jeromegn/Backbone.localStorage), [backbone.layoutmanager](https://github.com/tbranyen/backbone.layoutmanager), or [backbone-relational](https://github.com/PaulUithol/Backbone-relational) do). Instead, backbone-fixins will only ever be a handful of little boilerplate utilities with the motivation of helping new applications get up-and-running quickly.
+This project doesn't aim to saddle users with a new Backbone meta-framework. But neither does it have the luxury of being so focused as to only tackle one feature or problem (like [backbone-localstorage](https://github.com/jeromegn/Backbone.localStorage), [backbone.layoutmanager](https://github.com/tbranyen/backbone.layoutmanager), or [backbone-relational](https://github.com/PaulUithol/Backbone-relational) do). Instead, backbone-fixins will only ever be a handful of little, easy-to-discard boilerplate utilities. The only motivation here is to help new applications get up-and-running a little more quickly.
+
+# Components
+
+Right now it's just the SuperView. I've got short-term plans to add a generic CollectionView and a mixin that aid in model validation.
 
 ## Backbone.Fixins.SuperView
 
@@ -12,10 +16,12 @@ Most basic Backbone views do the following:
 
 1. Override the `#render` function
 2. Grab a compiled template
-3. Generate HTML by passing a context object to the template that usually serializes the view's `model` or `collection` property as JSON.
+3. Generate HTML by passing a context object to the template; usually by serializing the view's `model` property as JSON.
 4. Render that HTML into the View's `el` element.
 
-And while this works fine, blah. First, none of this is a concern of custom view, it's a concern of nearly *every* view—why not DRY this up and get it out of the way? Second, overridden `render` functions never age well. As most Views mature, "render-time" behavior will just be tacked onto the `render` function. Because this violates [SRP](http://en.wikipedia.org/wiki/Single_responsibility_principle), it makes for complex unit tests and complicates performance optimizations that try to minimize calls to `render`
+And while this works fine, I'm sick of writing code to do it. First, none of this is a domain concern... it's a concern shared by nearly *every* view—why not DRY this up and get it out of the way? Second, overridden `render` functions don't age gracefully, in my experience.
+
+As most Views mature, "render-time" behavior is often just tacked on at the end of the `render` function. Because this violates [SRP](http://en.wikipedia.org/wiki/Single_responsibility_principle), it makes for complex unit tests and complicates performance optimizations that try to minimize calls to `render`. The `Backbone.Fixins.SuperView` intends to discourage users from coupling render behaviors from the start.
 
 So here's an example Backbone view that extends from `Backbone.Fixins.SuperView`:
 
@@ -33,6 +39,12 @@ Invoking `new MyView(model: new Backbone.Model).render()` will do a lot for you:
 3. It will render the resulting HTML into the view's `el` element.
 4. It will invoke the view's `renderJQueryAccordion` function, because the function's name started with the word "render".
 5. It will trigger a `"rendered"` event on the view, so that additional post-render behavior can be added dynamically without tempting the user to override the `render` function
+
+In case you missed it, that means that in addition to making some logical assumptions, two new conventions can help you avoid coupling behaviors that only have rendering in common.
+
+* Any view may define any number of methods that start with the word "render", and they'll each be called immediately after the template is re-rendered. But the methods are still available to be bound to other events to allow small aspects of the view to be re-rendered without a more-expensive call to the `render` function.
+
+* After each render is completed, views will emit a "rendered" event that anything else can bind to.
 
 ### SuperView customization
 
