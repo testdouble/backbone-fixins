@@ -36,30 +36,26 @@ Invoking `new MyView(model: new Backbone.Model).render()` will do a lot for you:
 2. It will invoke the template by passing it the view's `model.toJSON()`
 3. It will render the resulting HTML into the view's `el` element
 4. It will invoke the view's `renderJQueryAccordion` function, because the function's name started with the word "render"
-5. It will trigger a `"rendered"` event on the view, so that behavior can be added whenever the view is rendered (without tempting the user to override the `render` function)
+5. It will trigger a `"rendered"` event on the view, so that any behavior can be triggered whenever the view is rendered (and without tempting the user to override the `render` function)
 
-In case you missed it, that means that in addition to making some logical assumptions, two new conventions can help you avoid coupling behaviors that only have rendering in common.
+In case you missed it, that means that in addition to making some logical assumptions, two new conventions can help you avoid coupling behaviors that have only the concept of "rendering stuff" in common.
 
-* Any view may define any number of methods that start with the word "render", and they'll each be called immediately after the template is re-rendered. But the methods are still available to be bound to other events to allow small aspects of the view to be re-rendered without a more-expensive call to the `render` function
+* Any view may define any number of methods that start with the word "render", and they'll each be called immediately after the template is re-rendered. Because the methods are still available to be bound to other events or called discretely, small aspects of the view can easily be re-rendered without making a more-expensive call to the `render` function
 
-* After each render is completed, views will emit a "rendered" event that anything else can bind to
+* After each render is completed, views will emit a "rendered" event that anyone with a reference to the view can bind to.
 
 ### SuperView customization
 
-Of course, not all views will be the same. They can optionally define these attributes to alter the behavior of the SuperView:
+Of course, not all views will fit this mold snugly. Any view can optionally define these attributes to alter the behavior of the SuperView:
 
 * `template` - *function or string* - the locator of the view (e.g. "templates/popups/panda_view")
-* `templateContext` - *function or object* - the object to be passed to the compiled
+* `templateContext` - *function or object* - the object to be passed to the compiled template (e.g. `{ enabled: true, time: new Date() }`)
 
-If your application won't be using `JST`, you'll need to override the `templateFunction` configuration (see below).
+Note that if your application won't be locating its templates on a global `JST` object (as is the way of [Jammit](http://documentcloud.github.com/jammit/) and [Sprockets](https://github.com/sstephenson/sprockets)), you'll need to override the `templateFunction` configuration (see below for an example).
 
 ## Application-wide Configuration
 
-Since many folks don't use a server-side template compilation tool that gives them a handy `JST` object, most of the interesting bits are configurable.
-
-By passing in a configuration object to `Backbone.fixins.configure()`, some default behavior can be overridden.
-
-Current application-wide options include:
+Backbone-fixins has a handful of global configuration options that can be set by passing a configuration object to `Backbone.fixins.configure()`. Current application-wide options include:
 
 * `defaultTemplateLocator` - *function(view)* - given a view, find the *locator* of the template. (default: "templates/view_name_in_snake_case")
 * `templateFunction` - *function(locator)* - given a locator, return a  compiled template function (default: the function at `JST[locator]`)
