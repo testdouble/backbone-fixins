@@ -9,7 +9,7 @@ describe "Backbone.Fixins.SuperView", ->
       Given -> @subView = class SubView extends Backbone.Fixins.SuperView
       Given -> @subject = new @subView(model: @model)
       When -> @subject.render()
-      Then -> @subject.$('.HTML').length == 1
+      Then -> expect(@subject.el).toHas('.HTML')
 
     context "a view that has some extra render-time behavior", ->
       Given -> @subView = class SubView extends Backbone.Fixins.SuperView
@@ -37,7 +37,7 @@ describe "Backbone.Fixins.SuperView", ->
         Given -> fakeJST('dont_tell_me_where_to_stick_my_template').when("some JSON").thenReturn('<div class="myHTML"></div>')
         Given -> @subject = new @subView(model: @model)
         When -> @subject.render()
-        Then -> @subject.$('.myHTML').length == 1
+        Then -> expect(@subject.el).toHas('.myHTML')
 
       context "as a string", ->
         Given -> @subView = class SubView extends Backbone.Fixins.SuperView

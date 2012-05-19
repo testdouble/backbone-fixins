@@ -13,6 +13,13 @@ root.itBehavesLike = (name) ->
   throw "No shared examples found named \"#{name}\"!" unless sharedExamples[name]?
   sharedExamples[name]()
 
+#matchers
+beforeEach ->
+  @addMatchers
+    toHas: (selector) ->
+      $(@actual).find(selector).length > 0
+
+
 #pending specs
 root.pending = ->
   Then -> console.log "PENDING: #{@suite.description}"
