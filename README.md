@@ -26,10 +26,8 @@ As most Views mature, "render-time" behavior is often just tacked on at the end 
 So here's an example Backbone view that extends from `Backbone.Fixins.SuperView`:
 
 ``` coffee
-
 class MyView extends Backbone.Fixins.SuperView
   renderJQueryAccordion: ->
-
 ```
 
 Invoking `new MyView(model: new Backbone.Model).render()` will do a lot for you:
