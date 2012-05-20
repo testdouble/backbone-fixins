@@ -92,18 +92,16 @@ Backbone.fixins.configure({
 
 # building backbone-fixins
 
-If you're interested in working on backbone-fixins, it'll be important for you to be able to run the tests and build a distribution. A few non-obvious prerequisites include: node, npm, coffeescript, and the QT library.
+If you're interested in working on backbone-fixins, it'll be important for you to be able to run the tests and build a distribution. One non-trivial prerequisite is the QT library.
 
-If you don't have any of those and you're on OS X, you'll want to install homebrew and go nuts:
+On OS X, I'd recommend using homebrew to get QT installed:
 
 ``` bash
 $ /usr/bin/ruby -e "$(/usr/bin/curl -fsSL https://raw.github.com/mxcl/homebrew/master/Library/Contributions/install_homebrew.rb)"
-$ brew install node
-$ curl http://npmjs.org/install.sh | sh
-$ npm install coffee-script
 $ brew install qt --build-from-source
-$ gem install bundler
 ```
+
+And if you have Ruby, but not bundler, you'll need to Bundler (`$ gem install bundler`) as well.
 
 Once you have the pre-reqs, you can build the whole shebang with:
 
