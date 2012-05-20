@@ -9,5 +9,9 @@ CLEAN << "dist"
 
 Jasmine::Headless::Task.new
 
-task :default => ['jasmine:headless', 'coffee:compile']
+task :example_app_cucumber do
+  system "cd examples/some_rails_app && bundle exec cucumber"
+end
+
+task :default => ['jasmine:headless', 'coffee:compile', 'example_app_cucumber']
 

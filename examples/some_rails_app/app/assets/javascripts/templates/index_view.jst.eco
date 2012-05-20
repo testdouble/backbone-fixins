@@ -1,0 +1,12 @@
+<div>Welcome!</div>
+<ul>
+  <li>
+    <a href="#super_view/simple">Simple SuperView Subclass</a>
+  </li>
+  <li>
+    <a href="#super_view/complex">Complex SuperView Subclass</a>
+  </li>
+  <li>
+    <a href="#super_view/customized">Customized SuperView Subclass</a>
+  </li>
+</ul>
