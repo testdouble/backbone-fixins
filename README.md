@@ -8,9 +8,9 @@ A common complaint directed at [Backbone.js](https://github.com/documentcloud/ba
 
 This project doesn't aim to saddle users with a new Backbone meta-framework. But neither does it have the luxury of being so focused as to only tackle one feature or problem (like [backbone-localstorage](https://github.com/jeromegn/Backbone.localStorage), [backbone.layoutmanager](https://github.com/tbranyen/backbone.layoutmanager), or [backbone-relational](https://github.com/PaulUithol/Backbone-relational) do). Instead, backbone-fixins will only ever be a handful of little, easy-to-discard boilerplate utilities. The only motivation here is to help new applications get up-and-running a little more quickly.
 
-# Components
+# components
 
-Right now it's just the SuperView. I've got short-term plans to add a generic CollectionView and a mixin that aid in model validation.
+Right now it's just the SuperView. I've got short-term plans to add a generic CollectionView and a mixin that aids in model validation.
 
 ## Backbone.Fixins.SuperView
 
@@ -55,7 +55,7 @@ Of course, not all views will fit this mold snugly. Any view can optionally defi
 
 Note that if your application won't be locating its templates on a global `JST` object (as is the way of [Jammit](http://documentcloud.github.com/jammit/) and [Sprockets](https://github.com/sstephenson/sprockets)), you'll need to override the `templateFunction` configuration (see below for an example).
 
-## Application-wide Configuration
+## application-wide configuration
 
 Backbone-fixins has a handful of global configuration options that can be set by passing a configuration object to `Backbone.fixins.configure()`. Current application-wide options include:
 
@@ -65,7 +65,7 @@ Backbone-fixins has a handful of global configuration options that can be set by
 
 You can also reset the default configuration with `Backbone.Fixins.resetConfiguration`
 
-### Example configuration
+### example configuration
 
 Suppose you want to grab your template functions from `<script>` elements on the DOM and compile them with underscore''s _.template(). You might override the configuration like this:
 
@@ -82,3 +82,42 @@ Backbone.fixins.configure({
 ```
 
 (Fair warning: this is a contrived example as it will inefficiently re-compile the template on each `render` invocation).
+
+# building backbone-fixins
+
+If you're interested in working on backbone-fixins, it'll be important for you to be able to run the tests and build a distribution. A few non-obvious prerequisites include: node, npm, coffeescript, and the QT library.
+
+If you don't have any of those and you're on OS X, you'll want to install homebrew and go nuts:
+
+``` bash
+$ /usr/bin/ruby -e "$(/usr/bin/curl -fsSL https://raw.github.com/mxcl/homebrew/master/Library/Contributions/install_homebrew.rb)"
+$ brew install node
+$ curl http://npmjs.org/install.sh | sh
+$ brew install qt --build-from-source
+$ gem install bundler
+```
+
+Once you have the pre-reqs, you can build the whole shebang with:
+
+``` bash
+$ bundle exec rake
+```
+
+Or you could run just the unit tests:
+
+``` bash
+$ bundle exec jasmine-headless-webkit
+```
+
+Or just the end-to-end tests:
+
+``` bash
+$ cd examples/some_rails_app
+$ bundle exec cucumber
+```
+
+Or just compile the CoffeeScript down to JavaScript into the `dist` directory:
+
+``` bash
+$ bundle exec rake coffee:compile
+```
