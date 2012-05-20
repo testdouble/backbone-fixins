@@ -2,6 +2,7 @@ src_files:
   - "spec/vendor/underscore.js"
   - "spec/vendor/jquery.min.js"
   - "spec/vendor/*.{js,coffee}"
+  - "src/backbone_fixins.coffee"
   - "src/**/*.{js,coffee}"
 
 stylesheets:
