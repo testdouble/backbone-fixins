@@ -21,10 +21,5 @@ task :example_app_cucumber do
   fail unless $? == 0
 end
 
-task :jasmine_hacking do
-  system "bundle exec jasmine-headless-webkit --keep"
-  puts File.read(FileList["jhw*.html"].first)
-end
-
-task :default => ['jasmine_hacking', 'jasmine:headless', 'coffee:compile', 'example_app_cucumber']
+task :default => ['jasmine:headless', 'coffee:compile', 'example_app_cucumber']
 
