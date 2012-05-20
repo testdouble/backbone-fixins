@@ -10,19 +10,92 @@
 
 
 (function() {
-  var Backbone, config, fixins, ogConfig, root, superView,
+  var ogConfig, root, superView, _base,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   root = this;
 
-  Backbone = root.Backbone;
-
-  if (Backbone == null) {
+  if (root.Backbone == null) {
     throw "backbone-fixins requires Backbone. Make sure you load Backbone first";
   }
 
-  fixins = Backbone.Fixins || (Backbone.Fixins = {});
+  (_base = root.Backbone).Fixins || (_base.Fixins = {});
+
+  /*
+  Extendable Configuration.
+  
+  Feel free to override the configuration to suit your project's needs.
+  
+  Examples:
+   - Suppose you want to grab your template functions from <script> elements on the DOM
+     and compile them with underscore's _.template(). You could:
+  
+      Backbone.Fixins.configure({
+        templateFunction: function(name){
+          templateSource = $('script[type="text/html"]#'+name).html();
+          return _.template(templateSource);
+        },
+        defaultTemplateLocator: function(view){
+          return Backbone.Fixins.helpers.constructorNameOf(view);
+        }
+      });
+  */
+
+
+  root = this;
+
+  Backbone.Fixins.configuration = ogConfig = {
+    templateFunction: function(name) {
+      return root.JST[name];
+    },
+    defaultTemplateContext: function(view) {
+      var _ref;
+      return ((_ref = view.model || view.collection) != null ? _ref.toJSON() : void 0) || {};
+    },
+    defaultTemplateLocator: function(view) {
+      var name;
+      name = Backbone.Fixins.helpers.constructorNameOf(view);
+      return "templates/" + (Backbone.Fixins.helpers.titleToSnakeCase(name));
+    }
+  };
+
+  Backbone.Fixins.configure = function(customConfigurationObject) {
+    return Backbone.Fixins.configuration = Backbone.Fixins.helpers.merge(Backbone.Fixins.configuration, customConfigurationObject);
+  };
+
+  Backbone.Fixins.resetConfiguration = function() {
+    return Backbone.Fixins.configuration = ogConfig;
+  };
+
+  /*
+  # Random helpers. Pretend these are private, but I won't hide them
+  #   in the event you have a really good reason to override them.
+  */
+
+
+  Backbone.Fixins.helpers = {
+    constructorNameOf: function(obj) {
+      var results;
+      results = /function (.{1,})\(/.exec(obj.constructor.toString());
+      if (results && results.length > 1) {
+        return results[1];
+      } else {
+        return "";
+      }
+    },
+    titleToSnakeCase: function(titleCasedString) {
+      return titleCasedString.replace(/([a-z\d])([A-Z]+)/g, '$1_$2').replace(/[-\s]+/g, '_').toLowerCase();
+    },
+    startsWith: function(str, options) {
+      var starts;
+      starts = options.butIsntExactly;
+      return str.length > starts.length && str.substr(0, starts.length) === starts;
+    },
+    merge: function(orig, newStuff) {
+      return _(orig).chain().clone().extend(newStuff).value();
+    }
+  };
 
   /*
   Backbone.Fixins.SuperView
@@ -43,13 +116,13 @@
 
     SuperView.prototype.render = function() {
       var context, f, template, _i, _len, _ref;
-      template = config.templateFunction(superView.locateTemplate(this));
+      template = Backbone.Fixins.configuration.templateFunction(superView.locateTemplate(this));
       context = superView.templateContext(this);
       this.$el.html(template(context));
       _ref = _(this).functions();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         f = _ref[_i];
-        if (fixins.helpers.startsWith(f, {
+        if (Backbone.Fixins.helpers.startsWith(f, {
           butIsntExactly: "render"
         })) {
           this[f]();
@@ -67,88 +140,15 @@
       if (view.templateContext != null) {
         return (typeof view.templateContext === "function" ? view.templateContext() : void 0) || view.templateContext;
       } else {
-        return config.defaultTemplateContext(view);
+        return Backbone.Fixins.configuration.defaultTemplateContext(view);
       }
     },
     locateTemplate: function(view) {
       if (view.template != null) {
         return (typeof view.template === "function" ? view.template() : void 0) || view.template;
       } else {
-        return config.defaultTemplateLocator(view);
+        return Backbone.Fixins.configuration.defaultTemplateLocator(view);
       }
-    }
-  };
-
-  /*
-  Extendable Configuration.
-  
-  Feel free to override the configuration to suit your project's needs.
-  
-  Examples:
-   - Suppose you want to grab your template functions from <script> elements on the DOM
-     and compile them with underscore's _.template(). You could:
-  
-      Backbone.fixins.configure({
-        templateFunction: function(name){
-          templateSource = $('script[type="text/html"]#'+name).html();
-          return _.template(templateSource);
-        },
-        defaultTemplateLocator: function(view){
-          return Backbone.Fixins.helpers.constructorNameOf(view);
-        }
-      });
-  */
-
-
-  config = ogConfig = {
-    templateFunction: function(name) {
-      return root.JST[name];
-    },
-    defaultTemplateContext: function(view) {
-      var _ref;
-      return ((_ref = view.model || view.collection) != null ? _ref.toJSON() : void 0) || {};
-    },
-    defaultTemplateLocator: function(view) {
-      var name;
-      name = fixins.helpers.constructorNameOf(view);
-      return "templates/" + (fixins.helpers.titleToSnakeCase(name));
-    }
-  };
-
-  Backbone.Fixins.configure = function(customConfigurationObject) {
-    return config = fixins.helpers.merge(config, customConfigurationObject);
-  };
-
-  Backbone.Fixins.resetConfiguration = function() {
-    return config = ogConfig;
-  };
-
-  /*
-  # Random helpers. Pretend these are private, but I won't hide them
-  #   in the event you have a really good reason to override them.
-  */
-
-
-  fixins.helpers = {
-    constructorNameOf: function(obj) {
-      var results;
-      results = /function (.{1,})\(/.exec(obj.constructor.toString());
-      if (results && results.length > 1) {
-        return results[1];
-      } else {
-        return "";
-      }
-    },
-    titleToSnakeCase: function(titleCasedString) {
-      return titleCasedString.replace(/([a-z\d])([A-Z]+)/g, '$1_$2').replace(/[-\s]+/g, '_').toLowerCase();
-    },
-    startsWith: function(str, options) {
-      var starts;
-      starts = options.butIsntExactly;
-      return str.length > starts.length && str.substr(0, starts.length) === starts;
-    },
-    merge: function(orig, newStuff) {
-      return _(orig).chain().clone().extend(newStuff).value();
     }
   };
 
