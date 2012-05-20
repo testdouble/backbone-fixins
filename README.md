@@ -116,9 +116,3 @@ Or just the end-to-end tests:
 $ cd examples/some_rails_app
 $ bundle exec cucumber
 ```
-
-Or just compile the CoffeeScript down to JavaScript into the `dist` directory:
-
-``` bash
-$ bundle exec rake coffee:compile
-```
