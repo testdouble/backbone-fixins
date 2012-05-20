@@ -7,14 +7,17 @@ Intended to be a view from which each application view will extend in order to D
 
 ###
 
-class Backbone.Fixins.SuperView extends Backbone.View
+root = this
+fixins = root.Backbone.Fixins
+
+class Backbone.Fixins.SuperView extends root.Backbone.View
   render: ->
-    template = Backbone.Fixins.configuration.templateFunction(superView.locateTemplate(@))
+    template = fixins.configuration.templateFunction(superView.locateTemplate(@))
     context = superView.templateContext(@)
     @$el.html(template(context))
 
     for f in _(@).functions()
-      @[f]() if Backbone.Fixins.helpers.startsWith(f, butIsntExactly: "render")
+      @[f]() if fixins.helpers.startsWith(f, butIsntExactly: "render")
 
     @trigger('rendered')
 
@@ -23,9 +26,9 @@ superView =
     if view.templateContext?
       view.templateContext?() or view.templateContext
     else
-      Backbone.Fixins.configuration.defaultTemplateContext(view)
+      fixins.configuration.defaultTemplateContext(view)
   locateTemplate: (view) ->
     if view.template?
       view.template?() or view.template
     else
-      Backbone.Fixins.configuration.defaultTemplateLocator(view)
+      fixins.configuration.defaultTemplateLocator(view)
