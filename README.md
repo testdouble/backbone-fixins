@@ -93,6 +93,7 @@ If you don't have any of those and you're on OS X, you'll want to install homebr
 $ /usr/bin/ruby -e "$(/usr/bin/curl -fsSL https://raw.github.com/mxcl/homebrew/master/Library/Contributions/install_homebrew.rb)"
 $ brew install node
 $ curl http://npmjs.org/install.sh | sh
+$ npm install coffee-script
 $ brew install qt --build-from-source
 $ gem install bundler
 ```
