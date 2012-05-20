@@ -1,5 +1,4 @@
 src_files:
-  - "spec/prereq/*.{js,coffee}"
   - "spec/vendor/underscore.js"
   - "spec/vendor/jquery.min.js"
   - "spec/vendor/*.{js,coffee}"
