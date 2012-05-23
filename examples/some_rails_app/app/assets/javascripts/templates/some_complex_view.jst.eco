@@ -1,0 +1,6 @@
+<div>
+  I'm a <%= @typeOfClass %> use of Backbone.Fixins.SuperView!
+</div>
+<div>
+  <a href="#">&lt;- Back</a>
+</div>
