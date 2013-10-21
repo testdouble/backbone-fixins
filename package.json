@@ -1,37 +1,32 @@
 {
   "name": "backbone-fixins",
-  "description": "Boilerplate that strengthens your backbone",
   "version": "0.0.1",
-  "keywords": [
-    "backbone",
-    "mixin",
-    "mvc",
-    "jasmine"
-  ],
+  "description": "Boilerplate that strengthens your backbone",
+  "homepage": "https://github.com/testdouble/backbone-fixins",
+  "author": {
+    "name": "Justin Searls",
+    "email" : "justin@testdouble.com",
+    "company": "Test Double, LLC"
+  },
   "dependencies": {
-    "backbone": "0.9.2"
+    "coffee-script": "~ 1.6.3",
+    "underscore": "~1.5.1",
+    "backbone" : "1.1.0"
+  },
+  "devDependencies": {
+    "lineman": ">=0.14.5"
   },
   "bugs": {
-    "web": "https://github.com/testdouble/backbone-fixins/issues"
+    "url": "https://github.com/testdouble/backbone-fixins/issues"
   },
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/testdouble/backbone-fixins.git"
-    }
-  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/testdouble/backbone-fixins.git"
+  },
   "licenses": [
     {
       "name": "Apache License 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0"
-    }
-  ],
-  "homepage": "https://github.com/testdouble/backbone-fixins",
-  "maintainers": [
-    {
-      "name": "Justin Searls",
-      "email": "searls@gmail.com",
-      "web": "http://about.me/searls"
     }
   ]
 }
