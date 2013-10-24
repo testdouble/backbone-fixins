@@ -1,8 +1,3 @@
-root = this
-
-root.context = root.describe
-root.xcontext = root.xdescribe
-
 #shared example groups
 sharedExamples = {}
 root.sharedExamplesFor = (name, behavior) ->

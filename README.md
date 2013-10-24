@@ -92,32 +92,12 @@ Backbone.fixins.configure({
 
 # building backbone-fixins
 
-If you're interested in working on backbone-fixins, it'll be important for you to be able to run the tests and build a distribution. One non-trivial prerequisite is the QT library.
+If you're interested in working on backbone-fixins, it'll be important for you to be able to run the tests and build a distribution. Luckily this is really easy thanks to lineman-lib!
 
-On OS X, I'd recommend using homebrew to get QT installed:
+* clone this repo
+* `npm install -g lineman`
+* `npm install`
+* `lineman run` in 1 terminal session (leave it running while you test)
+* `lineman spec` in another terminal session
 
-``` bash
-$ /usr/bin/ruby -e "$(/usr/bin/curl -fsSL https://raw.github.com/mxcl/homebrew/master/Library/Contributions/install_homebrew.rb)"
-$ brew install qt --build-from-source
-```
-
-And if you have Ruby, but not bundler, you'll need to Bundler (`$ gem install bundler`) as well.
-
-Once you have the pre-reqs, you can build the whole shebang with:
-
-``` bash
-$ bundle exec rake
-```
-
-Or you could run just the unit tests:
-
-``` bash
-$ bundle exec jasmine-headless-webkit
-```
-
-Or just the end-to-end tests:
-
-``` bash
-$ cd examples/some_rails_app
-$ bundle exec cucumber
-```
+When you are ready to issue a build, simply run `lineman build`. The output minifed bundles will live in `dist/`.
