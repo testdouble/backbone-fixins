@@ -64,7 +64,7 @@ Note that if your application won't be locating its templates on a global `JST` 
 
 ## application-wide configuration
 
-Backbone-fixins has a handful of global configuration options that can be set by passing a configuration object to `Backbone.fixins.configure()`. Current application-wide options include:
+Backbone-fixins has a handful of global configuration options that can be set by passing a configuration object to `Backbone.Fixins.configure()`. Current application-wide options include:
 
 * `defaultTemplateLocator` - *function(view)* - given a view, find the *locator* of the template. (default: "templates/view_name_in_snake_case")
 * `templateFunction` - *function(locator)* - given a locator, return a  compiled template function (default: the function at `JST[locator]`)
@@ -77,7 +77,7 @@ You can also reset the default configuration with `Backbone.Fixins.resetConfigur
 Suppose you want to grab your template functions from `<script>` elements on the DOM and compile them with underscore''s _.template(). You might override the configuration like this:
 
 ``` javascript
-Backbone.fixins.configure({
+Backbone.Fixins.configure({
   templateFunction: function(name){
     templateSource = $('script[type="text/html"]#'+name).html();
     return _.template(templateSource);
