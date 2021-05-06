@@ -6,8 +6,8 @@
 
 Download backbone-fixins and include it after [Backbone.js](http://backbonejs.org/):
 
-* **[backbone-fixins.js (uncompressed)](https://raw.github.com/testdouble/backbone-fixins/master/dist/backbone-fixins.js)**
-* **[backbone-fixins-min.js (minified)](https://raw.github.com/testdouble/backbone-fixins/master/dist/backbone-fixins-min.js)**
+* **[backbone-fixins.js (uncompressed)](https://raw.github.com/testdouble/backbone-fixins/main/dist/backbone-fixins.js)**
+* **[backbone-fixins-min.js (minified)](https://raw.github.com/testdouble/backbone-fixins/main/dist/backbone-fixins-min.js)**
 
 ## introduction
 
